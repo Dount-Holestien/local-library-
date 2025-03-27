@@ -1,23 +1,17 @@
-function findAuthorById(authors, id) {
-  // YOUR SOLUTION HERE
-}
+const findAuthorById = (authors, id) => authors.find((author) => author.id === id);
 
-function findBookById(books, id) {
-  // YOUR SOLUTION HERE
-}
+const findBookById = (books, id) => books.find((book) => book.id === id);
+
+// Finds all books by a specific author using filter()
+const getBooksByAuthor = (books, authorId) => books.filter(({ authorId: id }) => id === authorId);
 
 // NOTE: YOU DON'T HAVE TO EDIT THE FUNCTIONS BELOW
 function partitionBooksByBorrowedStatus(books) {
   return books.reduce(
     (acc, book) => {
       const [borrowed, returned] = acc;
-      const recent = book.borrows[0];
-      if (recent.returned) {
-        returned.push(book);
-      } else {
-        borrowed.push(book);
-      }
-
+      const { returned: isReturned } = book.borrows[0];
+      isReturned ? returned.push(book) : borrowed.push(book);
       return acc;
     },
     [[], []]
@@ -25,8 +19,8 @@ function partitionBooksByBorrowedStatus(books) {
 }
 
 function getBorrowersForBook(book, accounts) {
-  const accountsById = accounts.reduce((acc, account) => {
-    acc[account.id] = account;
+  const accountsById = accounts.reduce((acc, { id, ...rest }) => {
+    acc[id] = { id, ...rest };
     return acc;
   }, {});
 
@@ -41,6 +35,7 @@ function getBorrowersForBook(book, accounts) {
 module.exports = {
   findAuthorById,
   findBookById,
+  getBooksByAuthor,
   partitionBooksByBorrowedStatus,
   getBorrowersForBook,
 };
